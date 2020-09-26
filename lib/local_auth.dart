@@ -10,39 +10,6 @@ class LocalAuth extends StatefulWidget {
 
 class _LocalAuthState extends State<LocalAuth> {
   bool isAuth = false;
-  @override
-  Widget build(BuildContext context) {
-    return isAuth
-        ? HomePage()
-        : Scaffold(
-            backgroundColor: Colors.black,
-            body: Center(
-                child: InkWell(
-              onTap: () {
-                _checkBiometric();
-              },
-              child: Container(
-                height: 60,
-                width: MediaQuery.of(context).size.width * 0.9,
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.blueAccent, width: 2.5)),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(
-                      Icons.fingerprint,
-                      color: Colors.blueAccent,
-                    ),
-                    Text(
-                      "Verify Your Fingerprint",
-                      style: TextStyle(color: Colors.blueAccent),
-                    ),
-                  ],
-                ),
-              ),
-            )),
-          );
-  }
 
   void _checkBiometric() async {
     // check for biometric availability
@@ -77,11 +44,10 @@ class _LocalAuthState extends State<LocalAuth> {
     bool authenticated = false;
     try {
       authenticated = await auth.authenticateWithBiometrics(
-          localizedReason: 'Touch your finger on the sensor to login',
+          localizedReason: 'Verify your fingerprint for accessing MyToDo.',
           useErrorDialogs: true,
           stickyAuth: false,
-          androidAuthStrings:
-              AndroidAuthMessages(signInTitle: "Login to HomePage"));
+          androidAuthStrings: AndroidAuthMessages(signInTitle: "Welcome !!"));
     } catch (e) {
       print("error using biometric auth: $e");
     }
@@ -90,5 +56,46 @@ class _LocalAuthState extends State<LocalAuth> {
     });
 
     print("authenticated: $authenticated");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return isAuth
+        ? HomePage()
+        : Scaffold(
+            backgroundColor: Colors.black,
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'My Todo',
+                    style: TextStyle(
+                      color: Colors.yellow,
+                      fontSize: 80,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Padding(padding: EdgeInsets.all(15.0)),
+                  RaisedButton.icon(
+                    onPressed: () {
+                      _checkBiometric();
+                    },
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    label: Text(
+                      'Verify Your Finger Print' + '\n' + '"Click Here"',
+                      style: TextStyle(color: Colors.white, fontSize: 20),
+                    ),
+                    icon: Icon(
+                      Icons.fingerprint,
+                      color: Colors.white,
+                    ),
+                    textColor: Colors.white,
+                    color: Colors.green,
+                  ),
+                ],
+              ),
+            ));
   }
 }
