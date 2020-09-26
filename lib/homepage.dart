@@ -152,78 +152,102 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
+  Future<bool> _onWillPop() async {
+    return (await showDialog(
+          context: context,
+          builder: (context) => new AlertDialog(
+            title: new Text('Are you sure?'),
+            content: new Text('Do you want to exit ?'),
+            actions: <Widget>[
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: new Text('No'),
+              ),
+              new FlatButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: new Text('Yes'),
+              ),
+            ],
+          ),
+        )) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      builder: (context, snap) {
-        if (snap.hasData == null) {
-          return Center(
-            child: Text(
-              "No Data",
-            ),
-          );
-        } else {
-          if (myitems.length == 0) {
-            return Scaffold(
-              floatingActionButton: FloatingActionButton(
-                onPressed: showalertdialog,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-                backgroundColor: Colors.purple,
-              ),
-              appBar: AppBar(
-                backgroundColor: Colors.black,
-                centerTitle: true,
-                title: Text(
-                  "My ToDos",
-                  style: TextStyle(
-                    fontFamily: "Raleway",
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              backgroundColor: Colors.black,
-              body: Center(
-                child: Text(
-                  "No Task Avaliable",
-                  style: TextStyle(fontFamily: "Raleway", fontSize: 20.0),
-                ),
+    return new WillPopScope(
+      onWillPop: _onWillPop,
+      child: FutureBuilder(
+        builder: (context, snap) {
+          if (snap.hasData == null) {
+            return Center(
+              child: Text(
+                "No Data",
               ),
             );
           } else {
-            return Scaffold(
-              floatingActionButton: FloatingActionButton(
-                onPressed: showalertdialog,
-                child: Icon(
-                  Icons.add,
-                  color: Colors.white,
+            if (myitems.length == 0) {
+              return Scaffold(
+                floatingActionButton: FloatingActionButton(
+                  onPressed: showalertdialog,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: Colors.purple,
                 ),
-                backgroundColor: Colors.purple,
-              ),
-              appBar: AppBar(
-                backgroundColor: Colors.black,
-                centerTitle: true,
-                title: Text(
-                  "My Tasks",
-                  style: TextStyle(
-                    fontFamily: "Raleway",
-                    fontWeight: FontWeight.bold,
+                appBar: AppBar(
+                  backgroundColor: Colors.black,
+                  centerTitle: true,
+                  title: Text(
+                    "My ToDos",
+                    style: TextStyle(
+                      fontFamily: "Raleway",
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
-              ),
-              backgroundColor: Colors.black,
-              body: SingleChildScrollView(
-                child: Column(
-                  children: children,
+                backgroundColor: Colors.black,
+                body: Center(
+                  child: Text(
+                    "No Task Avaliable",
+                    style: TextStyle(fontFamily: "Raleway", fontSize: 20.0),
+                  ),
                 ),
-              ),
-            );
+              );
+            } else {
+              return Scaffold(
+                floatingActionButton: FloatingActionButton(
+                  onPressed: showalertdialog,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
+                  ),
+                  backgroundColor: Colors.purple,
+                ),
+                appBar: AppBar(
+                  backgroundColor: Colors.black,
+                  centerTitle: true,
+                  title: Text(
+                    "My Tasks",
+                    style: TextStyle(
+                      fontFamily: "Raleway",
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                backgroundColor: Colors.black,
+                body: SingleChildScrollView(
+                  child: Column(
+                    children: children,
+                  ),
+                ),
+              );
+            }
           }
-        }
-      },
-      future: query(),
+        },
+        future: query(),
+      ),
     );
   }
 }
